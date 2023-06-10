@@ -132,6 +132,35 @@ function openid_logout_hook()
     exit();
 }
 
+// Agrega un enlace al menú de administrador
+yourls_add_filter('admin_menu', 'add_custom_menu_item');
+
+function add_custom_menu_item()
+{
+    // Iniciar sesión si no está iniciada
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (isset($_SESSION['email'])) {
+        echo '<li><a href="' . OIDC_BASE_URL . '/account" target="_blank">Perfil</a></li>';
+    }
+}
+
+yourls_add_action('html_logo', 'add_custom_disclaimer');
+
+function add_custom_disclaimer()
+{
+    // Iniciar sesión si no está iniciada
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (isset($_SESSION['email'])) {
+        echo "<strong>Este cuenta se rigue por un servidor de autorizaci&oacute;n por favor si tiene dudas contacte a su administrador.</strong>";
+    }
+}
+
 function ProviderInstance()
 {
     // Crear una instancia del proveedor OAuth2
@@ -139,9 +168,9 @@ function ProviderInstance()
         'clientId' => OIDC_CLIENT_NAME,
         'clientSecret' => OIDC_CLIENT_SECRET,
         'redirectUri' => get_openid_login_url('openid-callback'),
-        'urlAuthorize' => OIDC_BASE_URL . '/auth',
-        'urlAccessToken' => OIDC_BASE_URL . '/token',
-        'urlResourceOwnerDetails' => OIDC_BASE_URL . '/userinfo'
+        'urlAuthorize' => OIDC_BASE_URL . '/protocol/openid-connect/auth',
+        'urlAccessToken' => OIDC_BASE_URL . '/protocol/openid-connect/token',
+        'urlResourceOwnerDetails' => OIDC_BASE_URL . '/protocol/openid-connect/userinfo'
     ]);
 
     return $provider;
