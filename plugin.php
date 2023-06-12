@@ -121,6 +121,8 @@ function openid_logout_hook()
         session_start();
     }
 
+    yourls_store_cookie(null);
+
     // Eliminar la información de la sesión
     unset($_SESSION['username']);
     unset($_SESSION['email']);
