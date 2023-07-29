@@ -165,14 +165,26 @@ function add_custom_disclaimer()
 
 function ProviderInstance()
 {
+
+    $open_id = OIDC_BASE_URL . "/.well-known/openid-configuration";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $open_id);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    $data = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($data);
+
     // Crear una instancia del proveedor OAuth2
     $provider = new GenericProvider([
         'clientId' => OIDC_CLIENT_NAME,
         'clientSecret' => OIDC_CLIENT_SECRET,
         'redirectUri' => get_openid_login_url('openid-callback'),
-        'urlAuthorize' => OIDC_BASE_URL . '/auth',
-        'urlAccessToken' => OIDC_BASE_URL . '/token',
-        'urlResourceOwnerDetails' => OIDC_BASE_URL . '/userinfo'
+        'urlAuthorize' => $json->authorization_endpoint,
+        'urlAccessToken' => $json->token_endpoint,
+        'urlResourceOwnerDetails' => $json->userinfo_endpoint
     ]);
 
     return $provider;
