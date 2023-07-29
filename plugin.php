@@ -170,9 +170,9 @@ function ProviderInstance()
         'clientId' => OIDC_CLIENT_NAME,
         'clientSecret' => OIDC_CLIENT_SECRET,
         'redirectUri' => get_openid_login_url('openid-callback'),
-        'urlAuthorize' => OIDC_BASE_URL . '/protocol/openid-connect/auth',
-        'urlAccessToken' => OIDC_BASE_URL . '/protocol/openid-connect/token',
-        'urlResourceOwnerDetails' => OIDC_BASE_URL . '/protocol/openid-connect/userinfo'
+        'urlAuthorize' => OIDC_BASE_URL . '/auth',
+        'urlAccessToken' => OIDC_BASE_URL . '/token',
+        'urlResourceOwnerDetails' => OIDC_BASE_URL . '/userinfo'
     ]);
 
     return $provider;
